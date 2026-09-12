@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { LayoutDashboard, LogIn, LogOut, Menu, Phone, X } from "lucide-react";
 import Logo from "./Logo";
 import { useSite } from "../../context/SiteContext";
-import { formatPhoneTel, ADMIN_URL } from "../../services/api";
+import { formatPhoneTel } from "../../services/api";
 import { useEnrollment } from "../ui/EnrollmentModal";
 import { useAuth } from "../../context/AuthContext";
 
@@ -81,13 +81,13 @@ export default function Navbar() {
           {user ? (
             <>
               {user.is_staff || user.is_superuser ? (
-                <a
-                  href={ADMIN_URL}
+                <Link
+                  to="/admin"
                   className="btn hidden !px-4 lg:inline-flex"
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   Admin panel
-                </a>
+                </Link>
               ) : null}
               <span className="hidden items-center gap-2 rounded-full bg-surface py-1.5 pl-1.5 pr-3.5 text-sm font-bold text-ink lg:flex">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-extrabold uppercase text-white">
@@ -172,10 +172,10 @@ export default function Navbar() {
                     </div>
                   </div>
                   {user.is_staff || user.is_superuser ? (
-                    <a href={ADMIN_URL} className="btn-primary w-full">
+                    <Link to="/admin" className="btn-primary w-full">
                       <LayoutDashboard className="h-4 w-4" />
                       Admin panel
-                    </a>
+                    </Link>
                   ) : null}
                   <button
                     onClick={() => {

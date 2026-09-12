@@ -3,7 +3,6 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, LogIn, UserRound } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
-import { API_URL } from "../services/api";
 import { usePageMeta } from "../utils/seo";
 import Logo from "../components/layout/Logo";
 export default function Login() {
@@ -48,25 +47,8 @@ export default function Login() {
     try {
       const u = await login(form.username.trim(), form.password);
       if (u.is_staff || u.is_superuser) {
-        const action = API_URL + "/api/auth/login/";
-        const formEl = document.createElement("form");
-        formEl.method = "POST";
-        formEl.action = action;
-        formEl.style.display = "none";
-        const fields = {
-          username: form.username.trim(),
-          password: form.password,
-          next: window.location.origin,
-        };
-        Object.entries(fields).forEach(([name, value]) => {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = name;
-          input.value = value;
-          formEl.appendChild(input);
-        });
-        document.body.appendChild(formEl);
-        formEl.submit();
+        toast.success("Xush kelibsiz, " + u.username + "!");
+        navigate("/admin");
       } else {
         toast.success("Xush kelibsiz, " + u.username + "!");
         navigate("/");
