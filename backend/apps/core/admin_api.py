@@ -30,6 +30,13 @@ class ImageUrlField(serializers.ImageField):
         request = self.context.get("request")
         return request.build_absolute_uri(url) if request else url
 
+    def to_internal_value(self, data):
+        # Pillow cannot validate SVG files; allow them so admin SVG uploads work.
+        name = (getattr(data, "name", "") or "").lower()
+        if name.endswith(".svg"):
+            return data
+        return super().to_internal_value(data)
+
 
 def _unique_slug(model, base, exclude_pk=None):
     slug = slugify(base) or "item"
