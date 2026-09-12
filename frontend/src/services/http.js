@@ -1,7 +1,10 @@
 import axios from "axios";
 
+export const API_URL = (import.meta.env.VITE_API_URL || "https://tri-zvezdy-avto-maktab-production.up.railway.app").replace(/\/$/, "");
+export const ADMIN_URL = `${API_URL}/admin/`;
+
 const http = axios.create({
-  baseURL: "/api",
+  baseURL: `${API_URL}/api`,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",

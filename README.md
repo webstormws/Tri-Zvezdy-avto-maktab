@@ -60,27 +60,54 @@ Parol: admin12345
 
 ---
 
-## Production: PostgreSQL ga o'tish
+## Production: PostgreSQL ga o'tish (Railway)
 
-Localda SQLite ishlatiladi. Production uchun `.env` faylida `DATABASE_URL` ni o'rnating:
+Localda SQLite ishlatiladi. Railway'da **PostgreSQL** ishlatish uchun:
+
+### 1. Railway'ga backend deploy
+
+1. **Railway** → **New Project** → **Deploy from GitHub** → shu reponi tanlang.
+2. **Settings** → **Root Directory** ga `backend` yozing.
+3. **Variables** da quyidagilarni o'rnating:
+
+   ```bash
+   DJANGO_SECRET_KEY=<tasodifiy uzun matn>
+   DJANGO_DEBUG=False
+   DJANGO_ALLOWED_HOSTS=tri-zvezdy-avto-maktab-production.up.railway.app,trizvezdi.webstorm.uz
+   ```
+
+4. **PostgreSQL** plugin qo'shing — Railway uni avtomatik `DATABASE_URL` o'zgaruvchisiga yozadi (settings.py avtomatik PostgreSQL'ni tanlaydi).
+5. `backend/Procfile` mavjud — deploy paytida **migrate + collectstatic + gunicorn** avtomatik ishlaydi.
+
+> **Muhim:** 502/bo'sh sahifa kelsa — mijozlar soni va media fayllarni tekshiring. `seed_data` **faqat bir marta**, qo'lda ishga tushiring:
+>
+> ```bash
+> railway run
+> python manage.py seed_data
+> ```
+
+### 2. Frontend deploy (trizvezdi.webstorm.uz)
+
+`frontend/.env` faylida:
 
 ```bash
-# backend/.env
-DATABASE_URL=postgres://trizvezdy_user:trizvezdy_pass@127.0.0.1:5432/trizvezdy_db
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=your-domain.com
-CORS_ALLOWED_ORIGINS=https://your-domain.com
+VITE_API_URL=https://tri-zvezdy-avto-maktab-production.up.railway.app
 ```
 
-Sozlamalar (`config/settings.py`) `DATABASE_URL` mavjud bo'lganda avtomatik PostgreSQL ni tanlaydi, aks holda SQLite.
-
-Keyin:
+So'ng qayta build qiling va `frontend/dist/` papkasini yuklang:
 
 ```bash
-python manage.py migrate
-python manage.py seed_data
-python manage.py collectstatic
+cd frontend
+npm install
+npm run build
 ```
+
+- Frontend API so'rovlari va rasmlar to'g'ridan-to'g'ri Railway backend'ga yuradi (absolute URL).
+- Admin panel: `VITE_API_URL/admin/` — ya'ni `https://tri-zvezdy-avto-maktab-production.up.railway.app/admin/`
+
+### 3. Restart / qayta deploy
+
+Railway'da dastlabki deploy'da o'rnatiladi, keyin har push'da avtomatik yangilanadi.
 
 ---
 

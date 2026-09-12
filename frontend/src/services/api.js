@@ -1,7 +1,7 @@
 import axios from "axios";
-import http from "./http";
+import http, { API_URL } from "./http";
 
-export const API_URL = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8001").replace(/\/$/, "");
+export { API_URL };
 export const ADMIN_URL = `${API_URL}/admin/`;
 
 export const authHttp = axios.create({

@@ -19,7 +19,11 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0").split(",")
+    for host in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,0.0.0.0,"
+        "tri-zvezdy-avto-maktab-production.up.railway.app,trizvezdi.webstorm.uz",
+    ).split(",")
     if host.strip()
 ]
 
@@ -30,11 +34,24 @@ CORS_ALLOWED_ORIGINS = [
         "CORS_ALLOWED_ORIGINS",
         "http://localhost:5173,http://127.0.0.1:5173,"
         "http://localhost:5174,http://127.0.0.1:5174,"
-        "http://localhost:5175,http://127.0.0.1:5175",
+        "http://localhost:5175,http://127.0.0.1:5175,"
+        "https://tri-zvezdy-avto-maktab-production.up.railway.app,"
+        "https://trizvezdi.webstorm.uz",
     ).split(",")
     if origin.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF: backend form-login POST and admin calls from these origins are trusted
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        "https://tri-zvezdy-avto-maktab-production.up.railway.app,"
+        "https://trizvezdi.webstorm.uz",
+    ).split(",")
+    if origin.strip()
+]
 
 # Application definition
 INSTALLED_APPS = [
